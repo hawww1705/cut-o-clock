@@ -73,8 +73,20 @@ document.addEventListener('DOMContentLoaded', () => {
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
             navMenu.classList.remove('open');
-            mobileToggle.querySelector('i').className = 'fa-solid fa-bars-staggered';
+            const icon = mobileToggle.querySelector('i');
+            if (icon) icon.className = 'fa-solid fa-bars-staggered';
         });
+    });
+
+    // Close menu when clicking anywhere outside the menu and toggle button
+    document.addEventListener('click', (e) => {
+        if (navMenu.classList.contains('open')) {
+            if (!navMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
+                navMenu.classList.remove('open');
+                const icon = mobileToggle.querySelector('i');
+                if (icon) icon.className = 'fa-solid fa-bars-staggered';
+            }
+        }
     });
 
     // Active Navigation Item Highlighter on Scroll
