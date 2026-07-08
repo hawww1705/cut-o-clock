@@ -97,35 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    /* --------------------------------------------------------------------------
-       04. CUSTOM CURSOR FOLLOWER
-       -------------------------------------------------------------------------- */
-    const cursorFollower = document.getElementById('cursor-follower');
-    const cursorDot = document.getElementById('cursor-dot');
-    const hoverableElements = document.querySelectorAll('a, button, input, textarea, select, .gallery-item, .slider-handle, .why-card');
 
-    if (window.innerWidth > 1024) {
-        document.addEventListener('mousemove', (e) => {
-            // Instant dot placement
-            cursorDot.style.left = `${e.clientX}px`;
-            cursorDot.style.top = `${e.clientY}px`;
-            
-            // Smooth lagged follower ring animation
-            cursorFollower.animate({
-                left: `${e.clientX}px`,
-                top: `${e.clientY}px`
-            }, { duration: 250, fill: 'forwards' });
-        });
-
-        hoverableElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursorFollower.classList.add('cursor-hovering');
-            });
-            el.addEventListener('mouseleave', () => {
-                cursorFollower.classList.remove('cursor-hovering');
-            });
-        });
-    }
 
     /* --------------------------------------------------------------------------
        05. SCROLL REVEAL (FADE IN ON SCROLL)
