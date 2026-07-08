@@ -1,0 +1,13 @@
+# Windows Thumbnail Cache
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.log
+.DS_Store
+
+# User configurations
+.vscode/
+.idea/
