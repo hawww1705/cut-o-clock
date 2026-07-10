@@ -15,6 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroBg = document.getElementById('hero-bg');
     const scrollTopBtn = document.getElementById('scroll-top-btn');
 
+    // Hero Parallax Tracking Variables
+    let scrollOffset = 0;
+    let mouseParallaxX = 0;
+    let mouseParallaxY = 0;
+
+    function updateHeroTransform() {
+        if (heroBg) {
+            heroBg.style.transform = `translate(${mouseParallaxX}px, ${scrollOffset + mouseParallaxY}px) scale(1.05)`;
+        }
+    }
+
     // Dismiss Preloader on Load
     window.addEventListener('load', () => {
         dismissPreloader();
@@ -53,7 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Scroll Parallax Hero
         if (heroBg && scrollTop < window.innerHeight) {
-            heroBg.style.transform = `translateY(${scrollTop * 0.4}px) scale(1.05)`;
+            scrollOffset = scrollTop * 0.4;
+            updateHeroTransform();
         }
 
         // Scroll-to-Top visibility
@@ -845,6 +857,194 @@ document.addEventListener('DOMContentLoaded', () => {
                 nameEl.textContent = 'BenchCode Dev';
             }
         });
+    }
+
+    /* --------------------------------------------------------------------------
+       13. LUXURY CUSTOM CURSOR INTERACTION
+       -------------------------------------------------------------------------- */
+    const cursor = document.getElementById('custom-cursor');
+    const cursorDot = cursor ? cursor.querySelector('.custom-cursor-dot') : null;
+    const cursorCircle = cursor ? cursor.querySelector('.custom-cursor-circle') : null;
+
+    if (cursor && cursorDot && cursorCircle) {
+        let mouseX = 0, mouseY = 0;
+        let circleX = 0, circleY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
+        });
+
+        function updateCursorPosition() {
+            const dx = mouseX - circleX;
+            const dy = mouseY - circleY;
+
+            circleX += dx * 0.15;
+            circleY += dy * 0.15;
+
+            cursorCircle.style.left = `${circleX}px`;
+            cursorCircle.style.top = `${circleY}px`;
+
+            requestAnimationFrame(updateCursorPosition);
+        }
+
+        requestAnimationFrame(updateCursorPosition);
+
+        const interactiveSelectors = 'a, button, select, input, textarea, .style-card, .gallery-item, [role="button"], .testimonial-btn, .insp-nav';
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest(interactiveSelectors)) {
+                cursor.classList.add('hover');
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest(interactiveSelectors)) {
+                let related = e.relatedTarget;
+                if (!related || !related.closest(interactiveSelectors)) {
+                    cursor.classList.remove('hover');
+                }
+            }
+        });
+
+        window.addEventListener('mousedown', () => {
+            cursor.classList.add('clicking');
+        });
+
+        window.addEventListener('mouseup', () => {
+            cursor.classList.remove('clicking');
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cursor.style.display = 'none';
+        });
+
+        document.addEventListener('mouseenter', () => {
+            cursor.style.display = '';
+        });
+    }
+
+    /* --------------------------------------------------------------------------
+       14. HERO MOUSE PARALLAX (DEPTH EFFECT)
+       -------------------------------------------------------------------------- */
+    const hero = document.getElementById('home');
+    const heroContent = hero ? hero.querySelector('.hero-content') : null;
+    const toolsContainer = document.getElementById('hero-tools-container');
+
+    if (hero) {
+        hero.addEventListener('mousemove', (e) => {
+            const rect = hero.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const normX = (x / rect.width) - 0.5;
+            const normY = (y / rect.height) - 0.5;
+
+            mouseParallaxX = normX * 25;
+            mouseParallaxY = normY * 25;
+            updateHeroTransform();
+
+            if (heroContent) {
+                heroContent.style.transform = `translate(${normX * -15}px, ${normY * -15}px)`;
+            }
+            if (toolsContainer) {
+                toolsContainer.style.transform = `translate(${normX * -30}px, ${normY * -30}px)`;
+            }
+        });
+
+        hero.addEventListener('mouseleave', () => {
+            mouseParallaxX = 0;
+            mouseParallaxY = 0;
+            updateHeroTransform();
+
+            if (heroContent) {
+                heroContent.style.transform = 'translate(0, 0)';
+            }
+            if (toolsContainer) {
+                toolsContainer.style.transform = 'translate(0, 0)';
+            }
+        });
+    }
+
+    /* --------------------------------------------------------------------------
+       15. FLOATING BARBER TOOLS GENERATION & PHYSICS
+       -------------------------------------------------------------------------- */
+    const heroToolsContainer = document.getElementById('hero-tools-container');
+    if (heroToolsContainer) {
+        const toolIcons = [
+            'fa-scissors',
+            'fa-soap',
+            'fa-brush',
+            'fa-spray-can-sparkles',
+            'fa-scissors',
+            'fa-brush'
+        ];
+
+        const toolsList = [];
+        const count = 8;
+        const width = heroToolsContainer.offsetWidth || window.innerWidth;
+        const height = heroToolsContainer.offsetHeight || window.innerHeight;
+
+        for (let i = 0; i < count; i++) {
+            const el = document.createElement('div');
+            el.className = 'hero-tool-floating';
+
+            const icon = toolIcons[Math.floor(Math.random() * toolIcons.length)];
+            el.innerHTML = `<i class="fa-solid ${icon}"></i>`;
+
+            const x = Math.random() * width;
+            const y = Math.random() * height;
+            const scale = Math.random() * 0.8 + 0.6;
+            const rotate = Math.random() * 360;
+
+            el.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg) scale(${scale})`;
+            el.style.fontSize = `${Math.random() * 1.2 + 1.2}rem`; // 1.2rem to 2.4rem
+
+            heroToolsContainer.appendChild(el);
+
+            toolsList.push({
+                el: el,
+                x: x,
+                y: y,
+                scale: scale,
+                rotate: rotate,
+                speedX: Math.random() * 0.4 - 0.2,
+                speedY: Math.random() * -0.5 - 0.2, // Rise upwards
+                rotSpeed: Math.random() * 0.2 - 0.1
+            });
+        }
+
+        function updateFloatingTools() {
+            const currentWidth = heroToolsContainer.offsetWidth || window.innerWidth;
+            const currentHeight = heroToolsContainer.offsetHeight || window.innerHeight;
+
+            toolsList.forEach(tool => {
+                tool.x += tool.speedX;
+                tool.y += tool.speedY;
+                tool.rotate += tool.rotSpeed;
+
+                if (tool.y < -50) {
+                    tool.y = currentHeight + 50;
+                    tool.x = Math.random() * currentWidth;
+                }
+                if (tool.x < -50) {
+                    tool.x = currentWidth + 50;
+                }
+                if (tool.x > currentWidth + 50) {
+                    tool.x = -50;
+                }
+
+                tool.el.style.left = '0px';
+                tool.el.style.top = '0px';
+                tool.el.style.transform = `translate(${tool.x}px, ${tool.y}px) rotate(${tool.rotate}deg) scale(${tool.scale})`;
+            });
+
+            requestAnimationFrame(updateFloatingTools);
+        }
+
+        requestAnimationFrame(updateFloatingTools);
     }
 
 });

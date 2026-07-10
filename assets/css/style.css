@@ -2718,3 +2718,115 @@ input[type="time"]::-webkit-calendar-picker-indicator {
         bottom: 15px;
     }
 }
+
+/* ==========================================================================
+   21. LUXURY INTERACTIVE ELEMENTS (ADDITIONAL)
+   ========================================================================== */
+
+/* Custom Cursor styling */
+@media (hover: hover) and (pointer: fine) {
+    body {
+        cursor: none;
+    }
+    a, button, select, input, textarea, .style-card, .gallery-item, [role="button"], .testimonial-btn, .insp-nav {
+        cursor: none !important;
+    }
+    
+    .custom-cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 10000;
+        display: block;
+    }
+    
+    .custom-cursor-dot {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background-color: var(--luxury-gold);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        transition: width 0.2s, height 0.2s, background-color 0.2s;
+        z-index: 10002;
+    }
+    
+    .custom-cursor-circle {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--luxury-gold);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), height 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s, background-color 0.3s;
+        z-index: 10001;
+    }
+    
+    /* Cursor hover/active states */
+    .custom-cursor.hover .custom-cursor-circle {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(200, 169, 106, 0.15);
+        border-color: var(--gold-hover);
+    }
+    
+    .custom-cursor.hover .custom-cursor-dot {
+        width: 4px;
+        height: 4px;
+        background-color: var(--gold-hover);
+    }
+    
+    .custom-cursor.clicking .custom-cursor-circle {
+        width: 24px;
+        height: 24px;
+        background-color: rgba(200, 169, 106, 0.3);
+        border-color: var(--gold-hover);
+    }
+}
+
+/* Fallback for touch devices: hide custom cursor container */
+@media (hover: none), (pointer: coarse) {
+    .custom-cursor {
+        display: none !important;
+    }
+}
+
+/* Floating Hero Tools */
+.hero-tools-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.hero-tool-floating {
+    position: absolute;
+    color: rgba(200, 169, 106, 0.08); /* subtle gold accent */
+    font-size: 2.5rem;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.3));
+    will-change: transform;
+}
+
+/* Hero Ambient Light Rays */
+.hero-light-rays {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(circle at 50% 30%, rgba(200, 169, 106, 0.08) 0%, transparent 60%);
+    mix-blend-mode: screen;
+}
