@@ -11,3 +11,6 @@ Desktop.ini
 # User configurations
 .vscode/
 .idea/
+
+.vercel
+.env*
